@@ -1,0 +1,29 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Nanum Gothic', sans-serif;
+}
+
+li {
+  list-style: none;
+}
+em {
+  font-style: normal;
+}
+a {
+  text-decoration: none;
+}
+header {
+  z-index: 10;
+}
+body {
+  z-index: 5;
+}
+footer{
+  z-index: 6;
+}
+
+
+#App_Main {
+  margin-top: 171px;
+}

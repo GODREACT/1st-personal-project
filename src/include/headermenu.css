@@ -1,0 +1,36 @@
+#Headermenu_list{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  height: 100px;
+}
+#Headermenu_list button{
+  width: 180px;
+  height: 40px;
+  font: optional;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ADB0B7
+}
+#Headermenu_list_btn{
+  background-color: transparent;
+  color: #000000; 
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s; /* 호버 효과를 위한 transition */
+}
+#Headermenu_list_btn a{
+  color: #000000;
+  font-weight: 300;
+}
+#Headermenu_list_btn:hover{
+  background-color: #84847C;
+  /* 호버 시 배경색 초록으로 변경 */
+  color: #fff; /* 호버 시 텍스트 색상 흰색으로 변경 */
+  cursor: pointer; /* 호버 시 커서 모양 변경 */
+  transform: scale(1.1); /* 호버 시 약간 확대되는 효과 */
+}

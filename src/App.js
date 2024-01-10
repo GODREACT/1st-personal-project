@@ -15,6 +15,7 @@ function App() {
   return (
     <div className="App">
       <Header/>
+      {/* 수정해봄 */}
       <div id='App_Main'>
         <Routes>
           <Route path='/' element={<Main/>}/>

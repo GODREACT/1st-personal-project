@@ -1,0 +1,127 @@
+/* ModalStyles.css */
+.MuiDialog-paper {
+  width: 120vw; /* 120% of the viewport width */
+  height: 120vh; /* 120% of the viewport height */
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-radius: 8px;
+}
+h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+p {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input,
+textarea {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+button {
+  padding: 12px 20px; /* Adjusted padding for buttons */
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  width: 100%; /* Make buttons occupy full width */
+  background-color: #007bff;
+  &:hover {
+    /* background-color: #0056b3; */
+    background-color: #ccc;
+  }
+}
+
+/* Specific button styles */
+.editButton {
+  margin-top: 10px; /* Adjust space between buttons */
+  background-color: #007bff;
+  color: #007bff;
+}
+
+.closeButton {
+  background-color: #ccc;
+  color: #007bff;
+}
+
+.writeButton {
+  width: 80px;
+  padding: 12px;
+  background-color: #007bff;
+  color: #fff;
+}
+
+.writeButton:hover {
+  background-color: #ccc;
+}
+.writeButton {
+  width: 80px;
+  padding: 12px;
+  background-color: #007bff;
+  color: #fff;
+}
+
+.writeButton:hover {
+  background-color: #ccc;
+}
+
+.userListPatch,.userListDelete{
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#submit_btn,#outlined_btn{
+  width: 100px;
+}
+#modal_btn{
+  /* border: 1px solid #000; */
+  width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* htmlboard_p 글작성 */
+#htmlboard_p_container{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+#htmlboard_p_top{
+  width: 1200px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: row;
+}
+#htmlboard_p_main{
+  width: 2000px;
+  height: 900px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

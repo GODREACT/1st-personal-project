@@ -39,8 +39,6 @@ function Header() {
     }
   }, []);
 
-
-  
   return(
     <header>
       <div id="header-wrapper">

@@ -1,27 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { API_URL } from '../config/serverurl';
 import axios from 'axios';
-import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import useAsync from '../customHook/useAsync';
 import './noticeboard.css';
 import { Link } from 'react-router-dom';
 import Dialog from '@mui/material/Dialog';
 import { styled } from '@mui/system';
+import { getCookie } from '../customer/cookies';
+import { Box, Typography, TextField, TextareaAutosize, Button,Container,TableContainer, Toolbar } from '@mui/material';
+import './htmlboard.css';
+
 
 // 모달의 스타일을 적용할 컴포넌트 생성
-const ModalWrapper = styled(Dialog)`
-  .MuiDialog-paper {
-    width: 80%; /* 모달 크기 */
-    margin: auto; /* 화면의 정중앙 */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999; /* 가장 앞쪽으로 나오도록 설정 */
-  }
-`;
+const ModalWrapper = styled(Dialog)``;
 
 async function htmlboard() {
   const res = await axios.get(`${API_URL}/html`);
@@ -35,8 +28,11 @@ function Html() {
   const [editedTitle, setEditedTitle] = useState(''); // 수정된 제목 상태
   const [editedContent, setEditedContent] = useState(''); // 수정된 내용 상태
 
+  const cookie = getCookie('loginCookie');
+  const navigate = useNavigate();
+
   const columns=[
-    {field: 'id', headerName:'아이디', width:70,},
+    {field: 'id', headerName:'게시물번호', width:100,},
     {field: 'title', headerName:'제목', width:110,},
     {field: 'content', headerName:'내용', width:250,},
     {field: 'author', headerName:'작성자',width:70,},
@@ -50,15 +46,22 @@ function Html() {
           <>
             {/* 삭제 */}
             <button className='userListDelete' onClick={async () => {
-              console.log(params.id);
-              await axios.delete(`${API_URL}/html/delete/${params.id}`)
-              .then(res => {
-                console.log(res.data);
-                window.location.reload();
-              })
-              .catch(err => {
-                console.log(err);
-              })
+              if(cookie) {
+                  console.log(params.id);
+                  await axios.delete(`${API_URL}/html/delete/${params.id}`)
+                  .then(res => {
+                    console.log(res.data);
+                    window.location.reload();
+                  })
+                  .catch(err => {
+                    console.log(err);
+                  })
+                  navigate('/htmlboar');
+              } else if(!cookie) {
+                alert('로그인 후 이용해주세요 !');
+                navigate('/members/login');
+              }
+              
             }}>
               삭제
             </button>
@@ -74,7 +77,16 @@ function Html() {
         return (
           <>
             {/* 수정 */}
-            <button className='userListPatch' onClick={() => handleEdit(params)}>
+            <button className='userListPatch' onClick={() =>{
+              if(cookie){
+                navigate('/htmlboard');
+                handleEdit(params)
+              } else if(!cookie){
+                alert('로그인후 이용해주세요');
+                navigate('/members/login');
+              }
+            }
+            }>
               수정
             </button>
           </>
@@ -125,8 +137,20 @@ function Html() {
 
   return (
     <div className="sell">
-      <Link to='/htmlboard_p'><button>글작성</button></Link>
-      {/* 데이터 표시 */}
+      {/* <Link to='/htmlboard_p'><button>글작성</button></Link> */}
+      <Toolbar>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          HTML 게시판
+        </Typography>
+        <button type='click' className='writeButton' onClick={() => {
+        if(cookie) {
+          navigate('/htmlboard_p');
+        } else if(!cookie) {
+          alert('로그인 후 이용해주세요 !');
+        }
+      }}> 글 작성 </button>
+      </Toolbar>
+
       <DataGrid
         rows={rdata.map((a) => ({
           id:a.id,
@@ -149,42 +173,72 @@ function Html() {
       />
 
       {/* 모달 */}
-      <ModalWrapper open={showModal} onClose={() => setShowModal(false)}>
-  <div className="modal-content">
-    {/* 선택한 행의 데이터 표시 */}
-    <h2>모달</h2>
-    {selectedRow && (
-      <>
-        <p>ID: {selectedRow.id}</p>
-        <p>Title: {selectedRow.title}</p>
-        <p>Content: {selectedRow.content}</p>
-        <p>Author: {selectedRow.author}</p>
-        <p>Created At: {selectedRow.created_at}</p>
-        {/* 수정 폼 */}
-        <form> {/* handleSubmit 함수는 수정 제출을 처리하는 함수입니다. */}
-          <input
-            type="text"
-            value={editedTitle}
-            onChange={(e) => setEditedTitle(e.target.value)}
-            placeholder="수정할 제목"
-          />
-          <textarea
-            value={editedContent}
-            onChange={(e) => setEditedContent(e.target.value)}
-            placeholder="수정할 내용"
-          />
-          {/* 수정 완료 버튼 */}
-          <button type="submit" onClick={handleSubmit}>수정 완료</button>
-        </form>
-        {/* 모달 닫기 버튼 */}
-        <button onClick={() => setShowModal(false)}>닫기</button>
-      </>
-    )}
-  </div>
-</ModalWrapper>
+      <ModalWrapper open={showModal} maxWidth="xl" maxHeight='90vh' onClose={() => setShowModal(false)}>
+        <Container>
+          <div className="modal-content">
+              <h2>HTML 게시물</h2>
+            {selectedRow && (
+              <>
+              {/* 수정 폼 */}
+                <form onSubmit={handleSubmit}>
+                  {/* 수정할 제목 */}
+                  <TextField
+                    type="text"
+                    label="수정할 제목"
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    value={editedTitle}
+                    onChange={(e) => setEditedTitle(e.target.value)}
+                  />
+                  {/* 수정할 내용 */}
+                  <Box sx={{ position: 'relative' }}>
+                    <TextareaAutosize
+                      value={editedContent}
+                      onChange={(e) => setEditedContent(e.target.value)}
+                      placeholder="수정할 내용"
+                      rows={37}
+                      variant="outlined"
+                      fullWidth
+                      minRows={20}
+                      style={{ width: '100%', resize: 'none', padding: '8px', marginTop: '8px' }}
+                    />
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        position: 'absolute',
+                        top: '-8px',
+                        left: '8px',
+                        bgcolor: 'white',
+                        padding: '0 4px',
+                      }}
+                    >
+                      수정할 내용
+                    </Typography>
+                  </Box>
+                  {/* 작성자와 작성 날짜 */}
+                  <Box sx={{ textAlign: 'right', marginTop: '10px' }}>
+                    <p>게시물번호: {selectedRow.id}</p>
+                    <Typography variant="subtitle2">작성자: {selectedRow.author}</Typography>
+                    <Typography variant="subtitle2">작성 날짜: {selectedRow.created_at}</Typography>
+                  </Box>
+                </form>
 
+                {/* 모달 수정, 닫기 버튼 */}
+                <div id='modal_btn'>
+                  <Button type="submit" id='submit_btn' variant="contained" onClick={handleSubmit}>
+                      수정 완료
+                  </Button>
+                  <Button variant="outlined" id='outlined_btn' onClick={() => setShowModal(false)}>
+                    닫기
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+        </Container>
+      </ModalWrapper>
     </div>
   );
 }
-
 export default Html;

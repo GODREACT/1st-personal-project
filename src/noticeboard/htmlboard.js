@@ -27,6 +27,7 @@ function Html() {
   const [showModal, setShowModal] = useState(false); // 모달 열림 상태
   const [editedTitle, setEditedTitle] = useState(''); // 수정된 제목 상태
   const [editedContent, setEditedContent] = useState(''); // 수정된 내용 상태
+  const [updateImg, setupdateImg] = useState(''); // 수정된 이미지 내용 상태
 
   const cookie = getCookie('loginCookie');
   const navigate = useNavigate();
@@ -37,6 +38,27 @@ function Html() {
     {field: 'content', headerName:'내용', width:250,},
     {field: 'author', headerName:'작성자',width:70,},
     {field: 'created_at', headerName:'작성날짜',width:200,},
+    // {field: 'img_url', headerName:'이미지',width:200,},
+    {
+      field: 'img_url',
+      headerName: '사진',
+      width: 120,
+      editable: false,
+      renderCell: (params) => {
+      let imgUrl = params.row.img_url;
+        return (
+          <>
+          <div className='notice-img-box' >
+            <img
+              className='notice-img'
+              src={params.row.img_url}
+              onClick={setShowModal}
+            />
+          </div>
+          </>
+        );
+      },
+    },
     {
       field: 'action',
       headerName: '삭제',
@@ -93,16 +115,19 @@ function Html() {
         );
       },
     }
+    
   ]
 
   const { id } = useParams();
   const [state] = useAsync(() => htmlboard(id), [id]);
   const { loading, data: rdata, error } = state;
+  console.log(rdata);
 
   useEffect(() => {
     if (selectedRow) {
       setEditedTitle(selectedRow.title);
       setEditedContent(selectedRow.content);
+      // setupdateImg(selectedRow.img_url);
     }
   }, [selectedRow]);
 
@@ -118,14 +143,34 @@ function Html() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // 수정된 데이터를 API로 전송하는 로직
+    const updateImg = document.getElementById('file-style').files[0];
     try {
-      const res = await axios.patch(`${API_URL}/html/update/${selectedRow.id}`, {
-        title: editedTitle,
-        content: editedContent,
-      });
-      console.log(res.data);
-      window.location.reload();
+      if (updateImg) {
+        const formData = new FormData();
+        formData.append('img_url', updateImg);
+  
+        const imgUploadRes = await axios.post(`${API_URL}/html/images`, formData);
+        const data = {
+          title: editedTitle,
+          content: editedContent,
+          img_url: imgUploadRes.data.path,
+        };
+  
+        await axios.patch(`${API_URL}/html/update/${selectedRow.id}`, data);
+        console.log("보냄");
+        window.location.reload();
+      } else {
+        // 이미지를 업로드하지 않은 경우, img_url을 빈 문자열로 수정
+        const data = {
+          title: editedTitle,
+          content: editedContent,
+          img_url: '',
+        };
+  
+        await axios.patch(`${API_URL}/html/update/${selectedRow.id}`, data);
+        console.log("보냄");
+        window.location.reload();
+      }
     } catch (err) {
       console.log(err);
     }
@@ -157,6 +202,8 @@ function Html() {
           title:a.title,
           content:a.content,
           author:a.author,
+          img_url:a.img_url,
+
           created_at:new Date(a.createdAt).toLocaleDateString('ko-KR', {
             year: '2-digit',
             month: '2-digit',
@@ -171,7 +218,7 @@ function Html() {
         onRowClick={(row) => handleRowClick(row.row)}
         checkboxSelection={false} // 기본 체크박스 기능 비활성화
       />
-
+  
       {/* 모달 */}
       <ModalWrapper open={showModal} maxWidth="xl" maxHeight='90vh' onClose={() => setShowModal(false)}>
         <Container>
@@ -179,6 +226,9 @@ function Html() {
               <h2>HTML 게시물</h2>
             {selectedRow && (
               <>
+               {/* 이미지 표시 */}
+               {/* <img src={selectedRow.img_url} alt="게시물 이미지" className="modal-image" /> */}
+
               {/* 수정 폼 */}
                 <form onSubmit={handleSubmit}>
                   {/* 수정할 제목 */}
@@ -193,6 +243,30 @@ function Html() {
                   />
                   {/* 수정할 내용 */}
                   <Box sx={{ position: 'relative' }}>
+                    <label htmlFor="file-style">
+                        사진 올리기
+                    <img
+                      src={updateImg ? URL.createObjectURL(updateImg) : selectedRow.img_url}
+                      alt="게시물 이미지"
+                      className="modal-image"
+                      style={{ width: '10%', height: 'auto' }}
+                    />
+
+                    {/* <img
+                      src={updateImg || selectedRow.img_url}
+                      alt="게시물 이미지"
+                      className="modal-image"
+                      style={{ width: '10%', height: 'auto' }}
+                    /> */}
+                    
+                      <input
+                        id='file-style' 
+                        className='htmlemodal-img'
+                        type="file"
+                        name="img_url"
+                        onChange={(e) => setupdateImg(e.target.files[0])}
+                        />
+                    </label>
                     <TextareaAutosize
                       value={editedContent}
                       onChange={(e) => setEditedContent(e.target.value)}

@@ -28,6 +28,7 @@ function Html() {
   const [editedTitle, setEditedTitle] = useState(''); // 수정된 제목 상태
   const [editedContent, setEditedContent] = useState(''); // 수정된 내용 상태
   const [updateImg, setupdateImg] = useState(''); // 수정된 이미지 내용 상태
+  const [views, setViews] = useState(''); //수정된 조회수 상태
 
   const cookie = getCookie('loginCookie');
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ function Html() {
     {field: 'content', headerName:'내용', width:250,},
     {field: 'author', headerName:'작성자',width:70,},
     {field: 'created_at', headerName:'작성날짜',width:200,},
+    {field: 'views', headerName:'조회수',width:70,},
     // {field: 'img_url', headerName:'이미지',width:200,},
     {
       field: 'img_url',
@@ -131,10 +133,25 @@ function Html() {
     }
   }, [selectedRow]);
 
-  const handleRowClick = (row) => {
+  const handleRowClick = async (row) => {
     setSelectedRow(row); // 선택한 행의 데이터를 상태에 저장
     setShowModal(true); // 모달 창 열기
+    try {
+      // 행을 클릭할 때마다 해당 행의 id를 서버로 전송하여 조회수 증가 요청
+      await axios.patch(`${API_URL}/html/increase-views/${row.id}`);
+      // 행 클릭 시 다른 동작을 하고 싶다면 이 부분을 수정
+ 
+      console.log('행 클릭:', row);
+    } catch (error) {
+      console.error('Error updating views:', error);
+    }
   };
+
+
+  // const handleRowClick = (row) => {
+  //   setSelectedRow(row); // 선택한 행의 데이터를 상태에 저장
+  //   setShowModal(true); // 모달 창 열기
+  // };
 
   const handleEdit = (params) => {
     setSelectedRow(params.row);
@@ -154,6 +171,7 @@ function Html() {
           title: editedTitle,
           content: editedContent,
           img_url: imgUploadRes.data.path,
+
         };
   
         await axios.patch(`${API_URL}/html/update/${selectedRow.id}`, data);
@@ -203,7 +221,7 @@ function Html() {
           content:a.content,
           author:a.author,
           img_url:a.img_url,
-
+          views:a.views,
           created_at:new Date(a.createdAt).toLocaleDateString('ko-KR', {
             year: '2-digit',
             month: '2-digit',
@@ -303,7 +321,10 @@ function Html() {
                   <Button type="submit" id='submit_btn' variant="contained" onClick={handleSubmit}>
                       수정 완료
                   </Button>
-                  <Button variant="outlined" id='outlined_btn' onClick={() => setShowModal(false)}>
+                  <Button variant="outlined" id='outlined_btn' onClick={() => {
+                    setShowModal(false);
+                    window.location.reload();
+                    }}>
                     닫기
                   </Button>
                 </div>

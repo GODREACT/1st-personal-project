@@ -35,13 +35,14 @@ function Htmlreview() {
   const navigate = useNavigate();
 
   const columns=[
-    {field: 'id', headerName:'댓글 번호', width:100,},
-    {field: 'title', headerName:'제목', width:110,},
-    {field: 'content', headerName:'내용', width:250,},
-    {field: 'author', headerName:'작성자',width:70,},
+    {field: 'id', headerName:'댓글 번호', width:100, headerAlign: 'center',align: 'center'},
+    {field: 'title', headerName:'제목', width:110, headerAlign: 'center',align: 'center'},
+    {field: 'content', headerName:'내용', width:750, headerAlign: 'center',align: 'center'},
+    {field: 'author', headerName:'작성자',width:90, headerAlign: 'center',align: 'center'},
     {
       field: 'action',
       headerName: '삭제',
+      headerAlign: 'center',
       width: 80,
       renderCell: (params) => {
         return (
@@ -74,6 +75,7 @@ function Htmlreview() {
     
     {field : 'edit',
      headerName : '수정',
+     headerAlign: 'center',
      width : 80,
      renderCell: (params) => {
         return (
@@ -115,17 +117,13 @@ function Htmlreview() {
     setSelectedRow(row); // 선택한 행의 데이터를 상태에 저장
     setShowModal(true); // 모달 창 열기
     try {
-      // 행을 클릭할 때마다 해당 행의 id를 서버로 전송하여 조회수 증가 요청
       await axios.patch(`${API_URL}/html/increase-views/${row.id}`);
-      // 행 클릭 시 다른 동작을 하고 싶다면 이 부분을 수정
  
       console.log('행 클릭:', row);
     } catch (error) {
       console.error('Error updating views:', error);
     }
   };
-
-
   // const handleRowClick = (row) => {
   //   setSelectedRow(row); // 선택한 행의 데이터를 상태에 저장
   //   setShowModal(true); // 모달 창 열기
@@ -240,8 +238,9 @@ function Htmlreview() {
                     </Typography>
                   </Box>
                   {/* 작성자와 작성 날짜 */}
-                  <Box sx={{ textAlign: 'right', marginTop: '10px' }}>
-                    <p>댓글 번호: {selectedRow.id}</p>
+                  <Box sx={{ textAlign: 'center', marginTop: '10px' }}>
+                    {/* <p>댓글 번호: {selectedRow.id}</p> */}
+                    <Typography variant="subtitle2">댓글 번호: {selectedRow.id}</Typography>
                     <Typography variant="subtitle2">작성자: {selectedRow.author}</Typography>
                     <Typography variant="subtitle2">작성 날짜: {selectedRow.created_at}</Typography>
                   </Box>

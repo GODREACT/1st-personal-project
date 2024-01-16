@@ -12,7 +12,7 @@ import { getCookie } from '../customer/cookies';
 import { Box, Typography, TextField, TextareaAutosize, Button,Container,TableContainer, Toolbar } from '@mui/material';
 import './htmlboard.css';
 import Htmlreview from './htmlreview';
- 
+import SearchComponent from '../main/searchresult';
 // 모달의 스타일을 적용할 컴포넌트 생성
 const ModalWrapper = styled(Dialog)``;
 
@@ -38,11 +38,11 @@ function Html() {
   };
 
   const columns=[
-    {field: 'id', headerName:'게시물번호', width:100, headerAlign: 'center',},
-    {field: 'title', headerName:'제목', width:110, headerAlign: 'center',},
-    {field: 'content', headerName:'내용', width:550, headerAlign: 'center',},
-    {field: 'author', headerName:'작성자',width:90, headerAlign: 'center',},
-    {field: 'created_at', headerName:'작성날짜',width:200, headerAlign: 'center',},
+    {field: 'id', headerName:'게시물번호', width:100, headerAlign: 'center',align: 'center'},
+    {field: 'title', headerName:'제목', width:110, headerAlign: 'center',align: 'center'},
+    {field: 'content', headerName:'내용', width:550, headerAlign: 'center',align: 'center'},
+    {field: 'author', headerName:'작성자',width:90, headerAlign: 'center',align: 'center'},
+    {field: 'created_at', headerName:'작성날짜',width:200, headerAlign: 'center',align: 'center'},
     {
       field: 'img_url',
       headerName: '사진',
@@ -64,10 +64,11 @@ function Html() {
         );
       },
     },
-    {field: 'views', headerName:'조회수',width:70,},
+    {field: 'views', headerName:'조회수',width:70,align: 'center'},
     {
       field: 'action',
       headerName: '삭제',
+      headerAlign: 'center',
       width: 80,
       renderCell: (params) => {
         return (
@@ -84,7 +85,7 @@ function Html() {
                   .catch(err => {
                     console.log(err);
                   })
-                  navigate('/htmlboar');
+                  navigate('/htmlboard');
               } else if(!cookie) {
                 alert('로그인 후 이용해주세요 !');
                 navigate('/members/login');
@@ -100,6 +101,7 @@ function Html() {
     
     {field : 'edit',
      headerName : '수정',
+     headerAlign: 'center',
      width : 80,
      renderCell: (params) => {
         return (
@@ -195,6 +197,9 @@ function Html() {
 
   return (
     <div className="sell">
+      <div id='SearchComponent_box'>
+        <SearchComponent /> {/* 여기에 SearchComponent를 렌더링합니다. */}
+      </div>
       {/* <Link to='/htmlboard_p'><button>글작성</button></Link> */}
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -208,32 +213,32 @@ function Html() {
         }
       }}> 글 작성 </button>
       </Toolbar>
-
-      <DataGrid
-        rows={rdata.map((a) => ({
-          id:a.id,
-          title:a.title,
-          content:a.content,
-          author:a.author,
-          img_url:a.img_url,
-          views:a.views,
-          created_at:new Date(a.createdAt).toLocaleDateString('ko-KR', {
-            year: '2-digit',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-          }),
-        }))}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageoptions={[5]}
-        disableSelectionOnClick // 행을 클릭했을 때 선택되는 기본 동작 비활성화
-        onRowClick={(row) => handleRowClick(row.row)}
-        checkboxSelection={false} // 기본 체크박스 기능 비활성화
-      />
+ 
+       <DataGrid
+          rows={rdata.map((a) => ({
+            id:a.id,
+            title:a.title,
+            content:a.content,
+            author:a.author,
+            img_url:a.img_url,
+            views:a.views,
+            created_at:new Date(a.createdAt).toLocaleDateString('ko-KR', {
+              year: '2-digit',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+            }),
+          }))}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageoptions={[5]}
+          disableSelectionOnClick // 행을 클릭했을 때 선택되는 기본 동작 비활성화
+          onRowClick={(row) => handleRowClick(row.row)}
+          checkboxSelection={false} // 기본 체크박스 기능 비활성화
+        />
   
       {/* 모달 */}
-      <ModalWrapper id='aaa' open={showModal} maxWidth="xl" maxHeight='100vh' onClose={() => setShowModal(false)}>
+      <ModalWrapper id='modal_container' open={showModal} maxWidth="xl" maxHeight='100vh' onClose={() => setShowModal(false)}>
         <Container>
           <div className="modal-content">
             {selectedRow && (
@@ -299,8 +304,9 @@ function Html() {
                   </Box>
                   {/* 작성자와 작성 날짜 */}
                   <div id='detail_container'>
-                    <Box sx={{ textAlign: 'right', marginTop: '10px' }}>
-                      <p>게시물번호: {selectedRow.id}</p>
+                    <Box sx={{ textAlign: 'center', marginTop: '10px' }}>
+                      {/* <p>게시물번호: {selectedRow.id}</p> */}
+                      <Typography variant="subtitle2">게시물 번호: {selectedRow.id}</Typography>
                       <Typography variant="subtitle2">작성자: {selectedRow.author}</Typography>
                       <Typography variant="subtitle2">작성 날짜: {selectedRow.created_at}</Typography>
                     </Box>

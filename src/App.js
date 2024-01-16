@@ -14,6 +14,8 @@ import Htmlboard_p from "./noticeboard/htmlboard_p";
 import Htmlreview from "./noticeboard/htmlreview";
 import Htmlreview_p from "./noticeboard/htmlreview_p";
 
+import SearchComponent from "./main/searchresult";
+
 import Cssboard from "./noticeboard/cssboard";
 function App() {
   return (
@@ -30,6 +32,7 @@ function App() {
           <Route path='/cssboard' element={<Cssboard/>}/>
           <Route path='/members/login' element={<Login/>}/>
           <Route path='/members/signup' element={<Sinup/>}/>
+          <Route path="/search/:keyword" element={<SearchComponent/>}/>
         </Routes>
       </div>
       {/* <Footer/> */}

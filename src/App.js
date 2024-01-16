@@ -8,9 +8,13 @@ import Header from './include/header';
 import Footer from "./include/footer";
 import Login from './customer/login';
 import Sinup from './customer/signup';
+
 import Htmlboard from "./noticeboard/htmlboard";
-import Cssboard from "./noticeboard/cssboard";
 import Htmlboard_p from "./noticeboard/htmlboard_p";
+import Htmlreview from "./noticeboard/htmlreview";
+import Htmlreview_p from "./noticeboard/htmlreview_p";
+
+import Cssboard from "./noticeboard/cssboard";
 function App() {
   return (
     <div className="App">
@@ -21,6 +25,8 @@ function App() {
           <Route path='/' element={<Main/>}/>
           <Route path='/htmlboard' element={<Htmlboard/>}/>
           <Route path='/htmlboard_p' element={<Htmlboard_p/>}/>
+          <Route path='/htmlreview' element={<Htmlreview/>}/>
+          <Route path='/htmlreview_p' element={<Htmlreview_p/>}/>
           <Route path='/cssboard' element={<Cssboard/>}/>
           <Route path='/members/login' element={<Login/>}/>
           <Route path='/members/signup' element={<Sinup/>}/>

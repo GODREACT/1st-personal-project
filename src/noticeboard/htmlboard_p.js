@@ -42,31 +42,6 @@ function Html_p() {
     }
   };
 
-
-  //   if (imgfile) {
-  //     const formData = new FormData();
-  //     formData.append('img_url', imgfile);
-  //     try {
-  //       const imgUpload = await axios.post(`${API_URL}/html/images`, formData);
-  //       console.log('보낸 이미지 데이터', imgUpload.data);
-  //       imgPath = imgUpload.data.path;
-  //       setNewData({...newData, img_url: imgPath})
-  //     } catch (error) {
-  //       console.error('이미지 업로드 오류', error);
-  //       // 오류 처리 로직 추가
-  //       return;
-  //     }
-  //  }
-  //   try {
-  //     await axios.post(`${API_URL}/html`, newData);
-  //     alert('데이터가 추가되었습니다.'); 
-  //     window.location.href = '/htmlboard'; // '/htmlboard' 페이지로 이동
-  //   } catch (error) {
-  //     console.error('Error adding data:', error);
-  //   };
-
-  
-  
   return (
     <div className="sell">
       <div>
@@ -91,21 +66,15 @@ function Html_p() {
             />
             <label htmlFor="file-style">
                 사진 올리기
-              <input
-                id='file-style' 
-                className='htmlemodal-img'
-                type="file"
-                name="img_url"
-                />
+              <div id='imgupload'>
+                <input
+                  id='file-style' 
+                  className='htmlemodal-img'
+                  type="file"
+                  name="img_url"
+                  />
+              </div>
             </label>
-            {/* <TextField
-              label="사진 올리기"
-              variant="outlined"
-              size="small"
-              style={{ width: '250px', height: '50px', marginRight: '10px' }}
-              value={newData.img_url}
-              onChange={(e) => setNewData({ ...newData, img_url: e.target.value })}
-            /> */}
           </div>
           <div id='htmlboard_p_main'>
             <TextField
@@ -114,7 +83,8 @@ function Html_p() {
               variant="outlined"
               size="small"
               multiline
-              rows={37}
+              maxRows={50}
+              minRows={37}
               style={{ width: '1200px', marginBottom: '20px' }}
               value={newData.content}
               onChange={(e) => setNewData({ ...newData, content: e.target.value })}
